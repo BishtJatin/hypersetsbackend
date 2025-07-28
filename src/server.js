@@ -4,14 +4,24 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 
 dotenv.config();
-connectDB();
 
 const app = express();
 
-// ✅ Enable CORS for frontend
+// ✅ Use dynamic origin based on environment
+const allowedOrigins = [
+  "http://localhost:3000", // local React
+  "https://your-frontend.vercel.app" // Vercel frontend
+];
+
 app.use(cors({
-  origin: "http://localhost:3000",
-  credentials: true,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
 }));
 
 app.use(express.json());
@@ -23,13 +33,14 @@ app.use("/api/progress", require("./routes/progress"));
 app.use("/api/leaderboard", require("./routes/leaderboard"));
 app.use("/api/user", require("./routes/user"));
 
+// ✅ Connect to DB and start server on correct port
 connectDB()
   .then(() => {
-    console.log("Database Connection established");
-    app.listen(7000, () => {
-      console.log("server is successfully listning on port 7000........");
+    const PORT = process.env.PORT || 7000;
+    app.listen(PORT, () => {
+      console.log(`✅ Server running on port ${PORT}...`);
     });
   })
   .catch((error) => {
-    console.error("Database cannot be connected");
+    console.error("❌ Database connection failed:", error.message);
   });
