@@ -1,5 +1,5 @@
 const WorkoutSession = require("../models/WorkoutSession");
-const User = require("../models/user");
+const User = require("../models/User");
 
 exports.getLeaderboard = async (req, res) => {
   try {
