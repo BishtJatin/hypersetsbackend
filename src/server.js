@@ -10,7 +10,7 @@ const app = express();
 // ✅ Use dynamic origin based on environment
 const allowedOrigins = [
   "http://localhost:3000", // local React
-  "https://your-frontend.vercel.app" // Vercel frontend
+  "https://hypersetsfrontend.vercel.app" // ✅ your actual Vercel frontend
 ];
 
 app.use(cors({
